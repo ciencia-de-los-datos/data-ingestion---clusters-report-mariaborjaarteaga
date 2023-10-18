@@ -61,7 +61,7 @@ def ingest_data():
     df['Columna4'] = df['Columna4'].str.replace(',', ', ')
     df['Columna3'] = df['Columna3'].str.replace(r' %', '', regex=True)
     df['Columna3'] = df['Columna3'].str.replace(r',', '.', regex=True)
-    nombres = ["Cluster", "Cantidad de palabras clave", "Porcentaje de palabras clave", "Principales palabras clave"]
+    nombres = ["cluster", "cantidad de palabras clave", "porcentaje de palabras clave", "principales palabras clave"]
     df.columns = nombres
     df.columns = df.columns.str.replace(' ', '_')
     return df
