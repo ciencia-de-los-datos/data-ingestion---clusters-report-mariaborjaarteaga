@@ -16,10 +16,12 @@ import re
 
 def ingest_data():
 
+
     #
     # Inserte su código aquí
     #
-    
+    import re
+    # Inicializa una lista vacía para almacenar las líneas a partir del patrón
     lineas_desde_patron = []
 
     # Abre el archivo 'nombre_del_archivo.txt' en modo lectura
@@ -41,6 +43,39 @@ def ingest_data():
                     acumulador += linea.strip() + ' '  # Añade la línea sin el salto de línea
             elif '----------' in linea:  # Encuentra el patrón
                 recopilando = True
+    archivo = open("clusters_report.txt", mode='r')
+    nombres = ["cluster", "cantidad de palabras clave", "porcentaje de palabras clave", "principales palabras clave"]
+    archivo.readline()
+    archivo.readline()
+    archivo.readline()
+    archivo.readline()
+    data= archivo.read()
+    archivo.close()
+    data = ' '.join(''.join(data).split())
+    data = data.split('.')
+    data.pop()
+    aux1 = []
+    aux2 = []
+    
+    aux1 = re.split('([o][l][ ])+',data[5])[0] + re.split('([o][l][ ])+',data[5])[1]
+    aux2 = re.split('([o][l][ ])+',data[5])[2]
+    
+    data[5] = aux1
+    data.insert(6, aux2)
+    txt = []
+    
+    
+    for i in data:
+      txt.append(i.split('%')[0].replace(',','.').split()+[i.split('%')[1].strip()])
+        
+    df_ = pd.DataFrame(txt, columns=['Columna1', 'Columna2', 'Columna3', 'Columna4'])
+    df_.columns = nombres
+    df_.columns = df.columns.str.replace(' ', '_')
+    
+    df_['cluster'] = pd.to_numeric(df_['cluster'])
+    df_['cantidad_de_palabras_clave'] = pd.to_numeric(df_['cantidad_de_palabras_clave'])
+    df_['porcentaje_de_palabras_clave'] = pd.to_numeric(df_['porcentaje_de_palabras_clave'])
+    
 
     # Ahora la lista 'lineas_desde_patron' contiene las líneas a partir del patrón '----------' sin saltos de línea
 
@@ -65,5 +100,6 @@ def ingest_data():
     nombres = ["Cluster", "Cantidad de palabras clave", "Porcentaje de palabras clave", "Principales palabras clave"]
     df.columns = nombres
     df.columns = df.columns.str.replace(' ', '_')
+
     
-    return df
+    return df_
