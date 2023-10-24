@@ -44,9 +44,7 @@ def ingest_data():
                 recopilando = True
 
     # Ahora la lista 'lineas_desde_patron' contiene las líneas a partir del patrón '----------' sin saltos de línea
-    nr = {'Columna1': '7', 'Columna2': '42', 'Columna3':'6,3 %','Columna4':'multi-objective   optimization,   energy   storage, 
-    economic    dispatch, non-dominated  sorting  genetic  algorithm,   sensitive   analysis,   hybrid renewable energy source, plug-in electric vehicle,
-    combined-heat and  power, multi-objective genetic algorithm, unit-commitment, dc-dc converters.'}
+    nr = {'Columna1': '7', 'Columna2': '42', 'Columna3':'6,3 %','Columna4':'multi-objective   optimization,   energy   storage,    economic    dispatch, non-dominated  sorting  genetic  algorithm,   sensitive   analysis,   hybrid renewable energy source, plug-in electric vehicle, combined-heat and  power, multi-objective genetic algorithm, unit-commitment, dc-dc converters.'}
     # Dividir cada elemento en la lista en 4 partes y crear una lista de listas
 
     
