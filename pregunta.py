@@ -43,14 +43,15 @@ def ingest_data():
                     acumulador += linea.strip() + ' '  # Añade la línea sin el salto de línea
             elif '----------' in linea:  # Encuentra el patrón
                 recopilando = True
-    archivo = open("clusters_report.txt", mode='r')
+    documento = open("clusters_report.txt", mode='r')
     nombres = ["cluster", "cantidad de palabras clave", "porcentaje de palabras clave", "principales palabras clave"]
-    archivo.readline()
-    archivo.readline()
-    archivo.readline()
-    archivo.readline()
-    data= archivo.read()
-    archivo.close()
+    documento.readline()
+    documento.readline()
+    documento.readline()
+    documento.readline()
+    # Ahora la lista 'lineas_desde_patron' contiene las líneas a partir del patrón '----------' sin saltos de línea
+    data= documento.read()
+    documento.close()
     data = ' '.join(''.join(data).split())
     data = data.split('.')
     data.pop()
@@ -70,14 +71,14 @@ def ingest_data():
         
     df_ = pd.DataFrame(txt, columns=['Columna1', 'Columna2', 'Columna3', 'Columna4'])
     df_.columns = nombres
-    df_.columns = df.columns.str.replace(' ', '_')
+    df_.columns = df_.columns.str.replace(' ', '_')
     
     df_['cluster'] = pd.to_numeric(df_['cluster'])
     df_['cantidad_de_palabras_clave'] = pd.to_numeric(df_['cantidad_de_palabras_clave'])
     df_['porcentaje_de_palabras_clave'] = pd.to_numeric(df_['porcentaje_de_palabras_clave'])
     
 
-    # Ahora la lista 'lineas_desde_patron' contiene las líneas a partir del patrón '----------' sin saltos de línea
+    
 
 
     # Tu lista lineas_desde_patron contiene elementos con 4 valores separados por tabulaciones.
