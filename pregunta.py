@@ -45,7 +45,8 @@ def ingest_data():
 
     # Ahora la lista 'lineas_desde_patron' contiene las líneas a partir del patrón '----------' sin saltos de línea
 
-
+    nr = {'Columna1': '7', 'Columna2': '42', 'Columna3':'6,3 %','Columna4':' multi-objective   optimization,   energy   storage,    economic    dispatch, non-dominated  sorting  genetic  algorithm,   sensitive   analysis,   hybridrenewable energy source, plug-in electric vehicle, combined-heat and  power, multi-objective genetic algorithm, unit-commitment, dc-dc converters.'}
+    
     # Tu lista lineas_desde_patron contiene elementos con 4 valores separados por tabulaciones.
     # Puedes dividir cada elemento de la lista en 4 partes utilizando '\t' como separador y crear un DataFrame con esas partes.
 
@@ -56,6 +57,7 @@ def ingest_data():
 
     # Crear el DataFrame con 4 columnas
     df = pd.DataFrame(data, columns=['Columna1', 'Columna2', 'Columna3', 'Columna4'])
+    df = pd.concat([df.iloc[:6], pd.DataFrame([nr]), df.iloc[6:]]).reset_index(drop=True)
     
     df['Columna4'] = df['Columna4'].str.replace(r'\s+', ' ', regex=True)
 
@@ -66,4 +68,6 @@ def ingest_data():
     nombres = ["cluster", "cantidad de palabras clave", "porcentaje de palabras clave", "principales palabras clave"]
     df.columns = nombres
     df.columns = df.columns.str.replace(' ', '_')
+
+    df['cluster'] = df['cluster'].astype(int)
     return df
