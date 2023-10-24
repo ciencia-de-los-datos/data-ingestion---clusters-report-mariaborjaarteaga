@@ -57,10 +57,10 @@ def ingest_data():
     # Crear el DataFrame con 4 columnas
     df = pd.DataFrame(data, columns=['Columna1', 'Columna2', 'Columna3', 'Columna4'])
     
-    df['Columna4'] = df['Columna4'].str.replace(r'\s+', ' ')
+    df['Columna4'] = df['Columna4'].str.replace(r'\s+', ' ', regex=True)
 
-    df['Columna4'] = df['Columna4'].str.replace(r', ', ',')
-    df['Columna4'] = df['Columna4'].str.replace(',', ', ')
+    df['Columna4'] = df['Columna4'].str.replace(r', ', ',', regex=True)
+    df['Columna4'] = df['Columna4'].str.replace(',', ', ', regex=True)
     df['Columna3'] = df['Columna3'].str.replace(r' %', '', regex=True)
     df['Columna3'] = df['Columna3'].str.replace(r',', '.', regex=True)
     nombres = ["cluster", "cantidad de palabras clave", "porcentaje de palabras clave", "principales palabras clave"]
