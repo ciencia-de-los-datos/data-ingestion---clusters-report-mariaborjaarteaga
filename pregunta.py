@@ -76,7 +76,7 @@ def ingest_data():
     cadena=df['principales_palabras_clave'][5]
     p= cadena.find(" 7")
     te= cadena[:p]
-    df.iloc[3, 5] = te
+    df.loc[5,'principales_palabras_clave']=te
 
     
     return df
