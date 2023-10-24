@@ -20,53 +20,50 @@ def ingest_data():
     # Inserte su código aquí
     #
     
-    filename = "clusters_report.txt"
-    cr1 = []
-    txt = []
+    lineas_desde_patron = []
 
-    plaintxt = open(filename, mode='r')
-    cr1.append(plaintxt.readline())
-    cr1.append(plaintxt.readline())
+    # Abre el archivo 'nombre_del_archivo.txt' en modo lectura
+    with open('clusters_report.txt', 'r') as archivo:
+        # Bandera para indicar si estamos recopilando líneas después del patrón
+        recopilando = False
 
-    for idx, i in enumerate(cr1):
-        cr1[idx] = ([i[:9], i[9:25].replace("\n",''), i[25:41].replace("\n",''), i[41:].replace("\n",'')])
+        # Inicializa una cadena para acumular las líneas
+        acumulador = ""
 
-    cr1[0] = list(zip(cr1[0], cr1[1]))
+        # Lee cada línea del archivo
+        for linea in archivo:
+            if recopilando:
+                if '.' in linea:
+                    acumulador += linea.strip()  # Añade la línea sin el salto de línea
+                    lineas_desde_patron.append(acumulador)
+                    acumulador = ""  # Restablece el acumulador para la siguiente sección
+                else:
+                    acumulador += linea.strip() + ' '  # Añade la línea sin el salto de línea
+            elif '----------' in linea:  # Encuentra el patrón
+                recopilando = True
 
-    cr1.pop(1)
-    
-    for idx, x in enumerate(cr1[0]):
-        cr1[0][idx] = '_'.join(''.join(x).split()).lower()
+    # Ahora la lista 'lineas_desde_patron' contiene las líneas a partir del patrón '----------' sin saltos de línea
 
-    
-    plaintxt.readline()
-    plaintxt.readline()
 
-    cra = plaintxt.read()
-    plaintxt.close()
+    # Tu lista lineas_desde_patron contiene elementos con 4 valores separados por tabulaciones.
+    # Puedes dividir cada elemento de la lista en 4 partes utilizando '\t' como separador y crear un DataFrame con esas partes.
 
-    cra = ' '.join(''.join(cra).split())
+    # Dividir cada elemento en la lista en 4 partes y crear una lista de listas
+    data=[]
+    for l in lineas_desde_patron:
+      data.append(re.split(r'\s{2,}', l,3))
 
-    cra = cra.split('.')
+    # Crear el DataFrame con 4 columnas
+    df = pd.DataFrame(data, columns=['Columna1', 'Columna2', 'Columna3', 'Columna4'])
 
-    cra.pop()
-    
-    aux1 = []
-    aux2 = []
+    df['Columna4'] = df['Columna4'].str.replace(r'\s+', ' ')
 
-    aux1 = re.split('([o][l][ ])+',cra[5])[0] + re.split('([o][l][ ])+',cra[5])[1]
-    aux2 = re.split('([o][l][ ])+',cra[5])[2]
-
-    cra[5] = aux1
-    cra.insert(6, aux2)
-
-    for i in cra:
-        txt.append(i.split('%')[0].replace(',','.').split()+[i.split('%')[1].strip()])
-    
-    df = pd.DataFrame(txt)
-    df.columns = cr1[0]
-    df['cluster'] = pd.to_numeric(df['cluster'])
-    df['cantidad_de_palabras_clave'] = pd.to_numeric(df['cantidad_de_palabras_clave'])
-    df['porcentaje_de_palabras_clave'] = pd.to_numeric(df['porcentaje_de_palabras_clave'])
+    df['Columna4'] = df['Columna4'].str.replace(r', ', ',')
+    df['Columna4'] = df['Columna4'].str.replace(',', ', ')
+    df['Columna3'] = df['Columna3'].str.replace(r' %', '', regex=True)
+    df['Columna3'] = df['Columna3'].str.replace(r',', '.', regex=True)
+    nombres = ["Cluster", "Cantidad de palabras clave", "Porcentaje de palabras clave", "Principales palabras clave"]
+    df.columns = nombres
+    df.columns = df.columns.str.replace(' ', '_')
     
     return df
