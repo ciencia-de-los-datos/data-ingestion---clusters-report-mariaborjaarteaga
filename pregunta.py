@@ -62,6 +62,7 @@ def ingest_data():
     df['Columna4'] = df['Columna4'].str.replace(r'\s+', ' ', regex=True)
 
     df['Columna4'] = df['Columna4'].str.replace(r', ', ',', regex=True)
+    df['Columna4'] = df['Columna4'].str.replace(r'. ', '', regex=True)
     df['Columna4'] = df['Columna4'].str.replace(',', ', ', regex=True)
     df['Columna3'] = df['Columna3'].str.replace(r' %', '', regex=True)
     df['Columna3'] = df['Columna3'].str.replace(r',', '.', regex=True)
@@ -71,4 +72,7 @@ def ingest_data():
     df.columns = df.columns.str.replace(' ', '_')
 
     df['cluster'] = df['cluster'].astype(int)
+    df['porcentaje_de_palabras_clave'] = df['porcentaje_de_palabras_clave'].astype(int)
+
+    
     return df
