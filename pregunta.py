@@ -20,7 +20,6 @@ def ingest_data():
     #
     # Inserte su código aquí
     #
-    import re
     # Inicializa una lista vacía para almacenar las líneas a partir del patrón
     lineas_desde_patron = []
 
@@ -76,21 +75,17 @@ def ingest_data():
     df_['cluster'] = pd.to_numeric(df_['cluster'])
     df_['cantidad_de_palabras_clave'] = pd.to_numeric(df_['cantidad_de_palabras_clave'])
     df_['porcentaje_de_palabras_clave'] = pd.to_numeric(df_['porcentaje_de_palabras_clave'])
-    
-
-    
-
 
     # Tu lista lineas_desde_patron contiene elementos con 4 valores separados por tabulaciones.
     # Puedes dividir cada elemento de la lista en 4 partes utilizando '\t' como separador y crear un DataFrame con esas partes.
 
     # Dividir cada elemento en la lista en 4 partes y crear una lista de listas
-    data=[]
+    dat=[]
     for l in lineas_desde_patron:
-      data.append(re.split(r'\s{2,}', l,3))
+      dat.append(re.split(r'\s{2,}', l,3))
 
     # Crear el DataFrame con 4 columnas
-    df = pd.DataFrame(data, columns=['Columna1', 'Columna2', 'Columna3', 'Columna4'])
+    df = pd.DataFrame(dat, columns=['Columna1', 'Columna2', 'Columna3', 'Columna4'])
 
     df['Columna4'] = df['Columna4'].str.replace(r'\s+', ' ')
 
