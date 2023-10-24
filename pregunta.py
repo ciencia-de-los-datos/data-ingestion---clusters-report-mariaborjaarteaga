@@ -72,7 +72,7 @@ def ingest_data():
     df['cluster'] = df['cluster'].astype(int)
     df['porcentaje_de_palabras_clave'] = df['porcentaje_de_palabras_clave'].astype(float)
     df['cantidad_de_palabras_clave'] = df['cantidad_de_palabras_clave'].astype(int)
-
+ 
     cadena=df.principales_palabras_clave.to_list()[5]
     p= cadena.find(" 7")
     te= cadena[:p]
