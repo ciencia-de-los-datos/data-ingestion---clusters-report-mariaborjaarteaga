@@ -10,6 +10,8 @@ espacio entre palabra y palabra.
 
 """
 import pandas as pd
+import re
+
 
 
 def ingest_data():
@@ -17,7 +19,7 @@ def ingest_data():
     #
     # Inserte su código aquí
     #
-    import re
+    
     # Inicializa una lista vacía para almacenar las líneas a partir del patrón
     lineas_desde_patron = []
 
