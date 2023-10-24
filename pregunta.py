@@ -51,8 +51,8 @@ def ingest_data():
     df.columns = nombres
     df.columns = df.columns.str.replace(' ', '_')
     
-    df['cluster'] = df['cluster'].astype(int)
-    df['porcentaje_de_palabras_clave'] = df['porcentaje_de_palabras_clave'].astype(float)
-    df['cantidad_de_palabras_clave'] = df['cantidad_de_palabras_clave'].astype(int)
+    df['cluster'] = pd.to_numeric(df['cluster'])
+    df['cantidad_de_palabras_clave'] = pd.to_numeric(df['cantidad_de_palabras_clave'])
+    df['porcentaje_de_palabras_clave'] = pd.to_numeric(df['porcentaje_de_palabras_clave'])
     
     return df
