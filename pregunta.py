@@ -20,37 +20,51 @@ def ingest_data():
     # Inserte su código aquí
     #
     
-    # Inicializa una lista vacía para almacenar las líneas a partir del patrón
-    archivo = open("clusters_report.txt", mode='r')
-    nombres = ["cluster", "cantidad de palabras clave", "porcentaje de palabras clave", "principales palabras clave"]
-    archivo.readline()
-    archivo.readline()
-    archivo.readline()
-    archivo.readline()
-    data= archivo.read()
-    archivo.close()
-    data = ' '.join(''.join(data).split())
-    data = data.split('.')
-    data.pop()
+    filename = "clusters_report.txt"
+    cr1 = []
+    txt = []
+
+    plaintxt = open(filename, mode='r')
+    cr1.append(plaintxt.readline())
+    cr1.append(plaintxt.readline())
+
+    for idx, i in enumerate(cr1):
+        cr1[idx] = ([i[:9], i[9:25].replace("\n",''), i[25:41].replace("\n",''), i[41:].replace("\n",'')])
+
+    cr1[0] = list(zip(cr1[0], cr1[1]))
+
+    cr1.pop(1)
+    
+    for idx, x in enumerate(cr1[0]):
+        cr1[0][idx] = '_'.join(''.join(x).split()).lower()
+
+    
+    plaintxt.readline()
+    plaintxt.readline()
+
+    cra = plaintxt.read()
+    plaintxt.close()
+
+    cra = ' '.join(''.join(cra).split())
+
+    cra = cra.split('.')
+
+    cra.pop()
+    
     aux1 = []
     aux2 = []
+
+    aux1 = re.split('([o][l][ ])+',cra[5])[0] + re.split('([o][l][ ])+',cra[5])[1]
+    aux2 = re.split('([o][l][ ])+',cra[5])[2]
+
+    cra[5] = aux1
+    cra.insert(6, aux2)
+
+    for i in cra:
+        txt.append(i.split('%')[0].replace(',','.').split()+[i.split('%')[1].strip()])
     
-    aux1 = re.split('([o][l][ ])+',data[5])[0] + re.split('([o][l][ ])+',data[5])[1]
-    aux2 = re.split('([o][l][ ])+',data[5])[2]
-    
-    data[5] = aux1
-    data.insert(6, aux2)
-    txt = []
-    
-    data.pop()
-    
-    for i in data:
-      txt.append(i.split('%')[0].replace(',','.').split()+[i.split('%')[1].strip()])
-        
-    df = pd.DataFrame(txt, columns=['Columna1', 'Columna2', 'Columna3', 'Columna4'])
-    df.columns = nombres
-    df.columns = df.columns.str.replace(' ', '_')
-    
+    df = pd.DataFrame(txt)
+    df.columns = cr1[0]
     df['cluster'] = pd.to_numeric(df['cluster'])
     df['cantidad_de_palabras_clave'] = pd.to_numeric(df['cantidad_de_palabras_clave'])
     df['porcentaje_de_palabras_clave'] = pd.to_numeric(df['porcentaje_de_palabras_clave'])
