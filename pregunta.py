@@ -76,7 +76,7 @@ def ingest_data():
     cadena=df['principales_palabras_clave'][5]
     p= cadena.find(" 7")
     te= cadena[:p]
-    df['principales_palabras_clave'][5] = texto_extraido
+    df['principales_palabras_clave'][5] = te
 
     
     return df
