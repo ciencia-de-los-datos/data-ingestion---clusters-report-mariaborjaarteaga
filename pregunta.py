@@ -25,41 +25,47 @@ def ingest_data():
 
     # Abre el archivo 'nombre_del_archivo.txt' en modo lectura
     with open('clusters_report.txt', 'r') as archivo:
-        # Bandera para indicar si estamos recopilando líneas después del patrón
-        recopilando = False
-
-        # Inicializa una cadena para acumular las líneas
-        acumulador = ""
-
-        # Lee cada línea del archivo
-        for linea in archivo:
-            if recopilando:
-                if '.' in linea:
-                    acumulador += linea.strip()  # Añade la línea sin el salto de línea
-                    lineas_desde_patron.append(acumulador)
-                    acumulador = ""  # Restablece el acumulador para la siguiente sección
-                else:
-                    acumulador += linea.strip() + ' '  # Añade la línea sin el salto de línea
-            elif '----------' in linea:  # Encuentra el patrón
-                recopilando = True
-
-    # Ahora la lista 'lineas_desde_patron' contiene las líneas a partir del patrón '----------' sin saltos de línea
-    nr = {'Columna1': '7', 'Columna2': '42', 'Columna3':'6,3 %','Columna4':'multi-objective   optimization,   energy   storage,    economic    dispatch, non-dominated  sorting  genetic  algorithm,   sensitive   analysis,   hybrid renewable energy source, plug-in electric vehicle, combined-heat and  power, multi-objective genetic algorithm, unit-commitment, dc-dc converters.'}
-    # Dividir cada elemento en la lista en 4 partes y crear una lista de listas
-
+      recopilando = False
+      # Inicializa una cadena para acumular las líneas
+      acumulador = ""
     
+      # Lee cada línea del archivo
+      for linea in archivo:
+        if recopilando:
+          if '.' in linea:
+            acumulador += linea.strip()  # Añade la línea sin el salto de línea
+            lineas_desde_patron.append(acumulador)
+            acumulador = ""  # Restablece el acumulador para la siguiente sección
+          else:
+            acumulador += linea.strip() + ' '  # Añade la línea sin el salto de línea
+        elif '----------' in linea:  # Encuentra el patrón
+          recopilando = True
     data=[]
     for l in lineas_desde_patron:
       data.append(re.split(r'\s{2,}', l,3))
-
+    
     # Crear el DataFrame con 4 columnas
     df = pd.DataFrame(data, columns=['Columna1', 'Columna2', 'Columna3', 'Columna4'])
-    df = pd.concat([df.iloc[:6], pd.DataFrame([nr]), df.iloc[6:]]).reset_index(drop=True)
+    
+    cadena=df['Columna4'][5]
+    p= cadena.find(" 7")
+    te= cadena[:p]
+    df.loc[5,'Columna4']=te
+    
+    nr=cadena[p:]
+    
+    data2 = {nombre: valor for nombre, valor in zip(['Columna1', 'Columna2', 'Columna3', 'Columna4'], re.split(r'\s{2,}', nr,3))}
+    
+    
+    df = pd.concat([df.iloc[:6], pd.DataFrame([data2]), df.iloc[6:]]).reset_index(drop=True)
+    
+    
+    
     
     df['Columna4'] = df['Columna4'].str.replace(r'\s+', ' ', regex=True)
-
-    df['Columna4'] = df['Columna4'].str.replace(r', ', ',', regex=True)
     
+    df['Columna4'] = df['Columna4'].str.replace(r', ', ',', regex=True)
+        
     df['Columna4'] = df['Columna4'].str.replace(',', ', ', regex=True)
     df['Columna3'] = df['Columna3'].str.replace(r' %', '', regex=True)
     df['Columna3'] = df['Columna3'].str.replace(r',', '.', regex=True)
@@ -68,15 +74,9 @@ def ingest_data():
     #df["cantidad de palabras clave"] = df["cantidad de palabras clave"].astype(int)
     df.columns = nombres
     df.columns = df.columns.str.replace(' ', '_')
-
+    
     df['cluster'] = df['cluster'].astype(int)
     df['porcentaje_de_palabras_clave'] = df['porcentaje_de_palabras_clave'].astype(float)
     df['cantidad_de_palabras_clave'] = df['cantidad_de_palabras_clave'].astype(int)
- 
-    cadena=df['principales_palabras_clave'][5]
-    p= cadena.find(" 7")
-    te= cadena[:p]
-    df.loc[5,'principales_palabras_clave']=te
-
     
     return df
